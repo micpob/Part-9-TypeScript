@@ -1,3 +1,28 @@
+import { isNotNumber } from "./utils";
+
+interface ValidValues {
+  dailyTargetHours: number;
+  dailyExerciseHours: number[];
+}
+
+const parseArguments = (args: string[]): ValidValues => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+  if (isNotNumber(args[2])) throw new Error('Target hours value must be a number!');
+
+  const exerciseHoursArray = args.slice(3).map((element, index) => {
+      if (isNotNumber(element)) {
+        throw new Error('Exercise hours values must be numbers!');
+      } else {
+       return Number(element)
+      }
+  })
+
+  return {
+    dailyTargetHours: Number(args[2]),
+    dailyExerciseHours: exerciseHoursArray
+  }
+}
+
 interface Result {
   periodLength: number,
   trainingDays: number,
@@ -8,7 +33,7 @@ interface Result {
   average: number
 }
 
-const calculateExercises = (dailyExerciseHours: number[], dailyTargetHours: number): Result => {
+const calculateExercises = (dailyTargetHours: number, dailyExerciseHours: number[]): Result => {
 
   const trainingDays = dailyExerciseHours.filter(v => v > 0)
   
@@ -47,7 +72,8 @@ return result
 }
 
 try {
-  console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+  const { dailyTargetHours, dailyExerciseHours } = parseArguments(process.argv);
+  console.log(calculateExercises(dailyTargetHours, dailyExerciseHours));
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.'
   if (error instanceof Error) {

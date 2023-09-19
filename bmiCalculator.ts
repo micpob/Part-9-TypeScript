@@ -1,5 +1,26 @@
+import { isNotNumber } from "./utils";
+interface ValidValues {
+  height: number;
+  weigth: number;
+}
+
+const parseArguments = (args: string[]): ValidValues => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+  if (args.length > 4) throw new Error('Too many arguments');
+
+  if (!isNotNumber(args[2]) && !isNotNumber(args[3])) {
+    return {
+      height: Number(args[2]),
+      weigth: Number(args[3])
+    }
+  } else {
+    throw new Error('Provided values were not numbers!');
+  }
+}
+
+
 const calculateBmi = (height: number, weigth: number) => {
-  
+
   const bmi = weigth / ((height / 100) ** 2);
 
   switch (true) {
@@ -34,7 +55,8 @@ const calculateBmi = (height: number, weigth: number) => {
 }
 
 try {
-  console.log(calculateBmi(180, 74));
+  const { height, weigth } = parseArguments(process.argv);
+  console.log(calculateBmi(height, weigth));
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.'
   if (error instanceof Error) {
