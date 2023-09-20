@@ -9,7 +9,7 @@ const parseArguments = (args: string[]): ValidValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
   if (isNotNumber(args[2])) throw new Error('Target hours value must be a number!');
 
-  const exerciseHoursArray = args.slice(3).map((element, index) => {
+  const exerciseHoursArray = args.slice(3).map((element) => {
       if (isNotNumber(element)) {
         throw new Error('Exercise hours values must be numbers!');
       } else {
