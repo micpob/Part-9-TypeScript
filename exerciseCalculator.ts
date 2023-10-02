@@ -13,15 +13,15 @@ const parseArguments = (args: string[]): ValidValues => {
       if (isNotNumber(element)) {
         throw new Error('Exercise hours values must be numbers!');
       } else {
-       return Number(element)
+       return Number(element);
       }
-  })
+  });
 
   return {
     dailyTargetHours: Number(args[2]),
     dailyExerciseHours: exerciseHoursArray
-  }
-}
+  };
+};
 
 interface Result {
   periodLength: number,
@@ -35,25 +35,25 @@ interface Result {
 
 const calculateExercises = (dailyTargetHours: number, dailyExerciseHours: number[]): Result => {
 
-  const trainingDays = dailyExerciseHours.filter(v => v > 0)
+  const trainingDays = dailyExerciseHours.filter(v => v > 0);
   
   const averageDailyExerciseTime = dailyExerciseHours.reduce( ( p, c ) => p + c, 0 ) / dailyExerciseHours.length;
 
-  let rating
-  let ratingDescription
+  let rating;
+  let ratingDescription;
 
   switch (true) {
     case (averageDailyExerciseTime < (dailyTargetHours * 0.8)):
-      rating = 1
-      ratingDescription = 'Bad'
+      rating = 1;
+      ratingDescription = 'Bad';
       break;
     case (averageDailyExerciseTime > (dailyTargetHours * 1.2)):
-      rating = 3
-      ratingDescription = 'Excellent'
+      rating = 3;
+      ratingDescription = 'Excellent';
       break;
     default:
-      rating = 2
-      ratingDescription = 'Good'
+      rating = 2;
+      ratingDescription = 'Good';
       break;
   }
 
@@ -65,17 +65,17 @@ const result = {
   ratingDescription: ratingDescription,
   target: dailyTargetHours,
   average: averageDailyExerciseTime
-}  
+};  
 
-return result
+return result;
   
-}
+};
 
 try {
   const { dailyTargetHours, dailyExerciseHours } = parseArguments(process.argv);
   console.log(calculateExercises(dailyTargetHours, dailyExerciseHours));
 } catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
+  let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }
