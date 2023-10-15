@@ -1,3 +1,4 @@
+import patientsData from '../../data/patients.ts';
 import { Patient, NewPatientEntry, noSsnPatient } from '../types.ts';
 import { v4 as uuidv4 } from 'uuid';
 
