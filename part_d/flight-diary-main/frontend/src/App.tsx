@@ -5,6 +5,7 @@ import { getAllEntries, createEntry } from './services/diaryService';
 
 function App() {
   const [diaryEntries, setDiaryeEntries] = useState<DiaryEntry[]>([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     getAllEntries().then(data  => {
@@ -24,12 +25,18 @@ function App() {
     }
     const response = await createEntry(newEntry)
     if (typeof response === 'string') {
+      setErrorMessage(response)
+    } else {
+      setErrorMessage('')
       const updatedDiaryEntries = [...diaryEntries, response]
       setDiaryeEntries(updatedDiaryEntries)
+    }
+  }
 
   return (
     <>
     <h2>Add new entry:</h2>
+    <h3 style={{color: 'red'}}>{errorMessage}</h3>
     <form onSubmit={addNewEntry}>
       <div>
         <label htmlFor="date">Date: </label>
