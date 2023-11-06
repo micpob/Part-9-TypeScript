@@ -39,22 +39,38 @@ function App() {
     <h3 style={{color: 'red'}}>{errorMessage}</h3>
     <form onSubmit={addNewEntry}>
       <div>
-        <label htmlFor="date">Date: </label>
-        <input id="date" />
+        <label htmlFor="date"><b>Date:</b></label>
+        <input type="date" id="date" />
       </div>
-      <div>
-        <label htmlFor="weather">Weather: </label>
-        <input id="weather" />
+      <div style={{display: 'flex', marginTop: '1em'}}>
+        <b>Weather: </b>
+        <label style={{margin: 'auto 0 auto 0.5em'}} htmlFor="weather_sunny">sunny</label>
+        <input type="radio" name="weather" value="sunny" id="weather_sunny" />
+        <label style={{margin: 'auto 0 auto 0.5em'}} htmlFor="weather_rainy">rainy</label>
+        <input type="radio" name="weather" value="rainy" id="weather_rainy" />
+        <label style={{margin: 'auto 0 auto 0.5em'}} htmlFor="weather_cloudy">cloudy</label>
+        <input type="radio" name="weather" value="cloudy" id="weather_cloudy" />
+        <label style={{margin: 'auto 0 auto 0.5em'}} htmlFor="weather_stormy">stormy</label>
+        <input type="radio" name="weather" value="stormy" id="weather_stormy" />
+        <label style={{margin: 'auto 0 auto 0.5em'}} htmlFor="weather_windy">windy</label>
+        <input type="radio" name="weather" value="windy" id="weather_windy" />
       </div>
-      <div>
-        <label htmlFor="visibility">Visibility: </label>
-        <input id="visibility" />
+      <div style={{display: 'flex', marginTop: '1em', marginBottom: '1em'}}>
+        <b>Visibility: </b>
+        <label style={{margin: 'auto 0 auto 0.5em'}} htmlFor="visibility_great">great</label>
+        <input type="radio" name="visibility" value="great" id="visibility_great" />
+        <label style={{margin: 'auto 0 auto 0.5em'}} htmlFor="visibility_good">good</label>
+        <input type="radio" name="visibility" value="good" id="visibility_good" />
+        <label style={{margin: 'auto 0 auto 0.5em'}} htmlFor="visibility_ok">ok</label>
+        <input type="radio" name="visibility" value="ok" id="visibility_ok" />
+        <label style={{margin: 'auto 0 auto 0.5em'}} htmlFor="visibility_poor">poor</label>
+        <input type="radio" name="visibility" value="poor" id="visibility_poor" />
       </div>
       <div>
         <label htmlFor="comment">Comment: </label>
         <input id="comment" />
       </div>
-      <button type="submit">Add</button>
+      <button style={{backgroundColor:'green', color: 'white', marginTop: '1em'}} type="submit">Add</button>
     </form>
     <h2>Diary entries:</h2>
       {diaryEntries.map(entry => (
