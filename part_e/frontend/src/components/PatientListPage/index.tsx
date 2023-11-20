@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
 import axios from 'axios';
-import { BrowserRouter as Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 
 import { PatientFormValues, Patient } from "../../types";
@@ -80,7 +80,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
       </Table>
       <AddPatientModal
         modalOpen={modalOpen}
-        onSubmit={submitNewPatient}
+        onSubmit={() => submitNewPatient}
         error={error}
         onClose={closeModal}
       />

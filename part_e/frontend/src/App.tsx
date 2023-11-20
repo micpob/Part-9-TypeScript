@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { BrowserRouter as Route, Link, Routes, useMatch } from "react-router-dom";
+import { Route, Link, Routes, useMatch } from "react-router-dom";
 import { Button, Divider, Container, Typography } from '@mui/material';
 
 import { apiBaseUrl } from "./constants";
@@ -13,11 +13,9 @@ import PatientPage from "./components/PatientPage";
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
 
-  const match = useMatch('/patients/:id')
-  const patient = match 
-    ? patients.find(patient => patient.id === match.params.id)
-    : undefined
-
+  const match = useMatch('/patients/:id');
+  const patientId = match ? match.params.id : 'Error: patient ID does not exist';
+  
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
 
@@ -42,7 +40,7 @@ const App = () => {
             <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
           </Routes>
           <Routes>
-            <Route path="/patients/:id" element={<PatientPage patient={patient} />} />
+            <Route path="/patients/:id" element={<PatientPage patientId={patientId} />} />
           </Routes>
         </Container>
     </div>
