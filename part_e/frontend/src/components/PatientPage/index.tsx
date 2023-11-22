@@ -6,16 +6,17 @@ import TransgenderIcon from '@mui/icons-material/Transgender';
 import patientService from "../../services/patients";
 import { apiBaseUrl } from "../../constants";
 import axios from "axios";
-import { Patient } from "../../types";
+import { Patient, Diagnosis } from "../../types";
+import Entries from "./Entries";
 
 interface Props {
   patientId? : string
+  diagnoses: Diagnosis[]
 }
 
-const PatientPage = ({patientId} : Props ) => {
+const PatientPage = ({patientId, diagnoses} : Props ) => {
 
   const [patient, setPatient] = useState<Patient>();
-  console.log(patientId);
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
@@ -32,10 +33,6 @@ const PatientPage = ({patientId} : Props ) => {
     void fetchPatient();
   }, []);
   
-
-
-  
-
   return (
     <div className="App">
       {
@@ -48,17 +45,7 @@ const PatientPage = ({patientId} : Props ) => {
           <div className="entries">
           <Typography style={{marginTop: 20, marginBottom: 10}} variant="h5" fontWeight={600}>Entries</Typography>
           {patient.entries.length > 0 ? 
-            patient.entries.map(entry => 
-              <div>
-                <Typography><b>{entry.date}</b> {entry.description}</Typography>
-                { entry.diagnosisCodes && 
-                  <ul>
-                    {entry.diagnosisCodes.map(code => <li>{code}</li>)}
-                  </ul>
-                }
-              </div>
-            )
-            
+            <Entries diagnoses={diagnoses} entries={patient.entries} ></Entries>            
           : 
             <Typography>No entries for this patient</Typography> 
           }

@@ -5,13 +5,15 @@ import { Button, Divider, Container, Typography } from '@mui/material';
 
 import { apiBaseUrl } from "./constants";
 import { Patient } from "./types";
-
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
 import PatientPage from "./components/PatientPage";
+import { Diagnosis } from "./types";
+import diagnosisService from "./services/diagnoses";
 
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
 
   const match = useMatch('/patients/:id');
   const patientId = match ? match.params.id : 'Error: patient ID does not exist';
@@ -24,6 +26,16 @@ const App = () => {
       setPatients(patients);
     };
     void fetchPatientList();
+  }, []);
+
+  useEffect(() => {
+    void axios.get<void>(`${apiBaseUrl}/ping`);
+
+    const fetchDiagnosesList = async () => {
+      const diagnoses = await diagnosisService.getAll();
+      setDiagnoses(diagnoses);
+    };
+    void fetchDiagnosesList();
   }, []);
   
   return (
@@ -40,7 +52,7 @@ const App = () => {
             <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
           </Routes>
           <Routes>
-            <Route path="/patients/:id" element={<PatientPage patientId={patientId} />} />
+            <Route path="/patients/:id" element={<PatientPage patientId={patientId} diagnoses={diagnoses} />} />
           </Routes>
         </Container>
     </div>
