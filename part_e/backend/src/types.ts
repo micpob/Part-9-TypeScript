@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
 
 export enum Gender { 
   Male ='male', 
@@ -22,6 +22,17 @@ export interface Patient {
   occupation: string;
   entries: Entry[];
 }
+
+export type Discharge = {
+  date: string,
+  criteria: string
+}
+
+export type SickLeave = { 
+  startDate: string, 
+  endDate: string 
+}
+  
 
 export type NewPatientEntry = Omit<Patient, 'id'>;
 
@@ -50,21 +61,34 @@ interface HealthCheckEntry extends BaseEntry {
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
   employerName: string;
-  sickLeave?: { startDate: string, endDate: string }
+  sickLeave?: SickLeave;
 }
+/* interface OccupationalHealthcareEntry extends BaseEntry {
+  type: "OccupationalHealthcare";
+  employerName: string;
+  sickLeave?: { startDate: string, endDate: string };
+} */
 
 interface HospitalEntry extends BaseEntry {
+  type: "Hospital";
+  discharge: Discharge;
+}
+/* interface HospitalEntry extends BaseEntry {
   type: "Hospital";
   discharge: {
     date: string;
     criteria: string;
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-//type EntryWithoutId = UnionOmit<Entry, 'id'>;
+  };
+} */
 
 export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+export type EntryWithoutId = UnionOmit<Entry, 'id'>;
+export type BaseEntryWithoutId = UnionOmit<BaseEntry, 'id'>;
+export type HospitalEntryWithoutId = UnionOmit<HospitalEntry, 'id'>;
+export type OccupationalHealthcareEntryWithoutId = UnionOmit<OccupationalHealthcareEntry, 'id'>;
+export type HealthCheckEntryWithoutId = UnionOmit<HealthCheckEntry, 'id'>;
+

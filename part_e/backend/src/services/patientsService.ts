@@ -1,5 +1,5 @@
 import patientsData from '../../data/patients-full.ts';
-import { Patient, NewPatientEntry, NonSensitivePatient } from '../types.ts';
+import { Patient, NewPatientEntry, NonSensitivePatient, EntryWithoutId, Entry } from '../types.ts';
 import { v4 as uuidv4 } from 'uuid';
 
 const patients : Patient[] = patientsData;
@@ -38,8 +38,25 @@ const uniqueId = uuidv4();
    return newPatient;
 };
 
+const AddEntry = (newEntry : EntryWithoutId, patientId: string) : Entry => {
+
+  const patient = getPatient(patientId)
+
+  const uniqueId = uuidv4();
+
+  const entry = { 
+    id: uniqueId,
+    ...newEntry
+   };
+
+   patient.entries.push(entry)
+   
+   return entry;
+};
+
 export default {
   getPatients,
   getPatient,
-  AddPatient
+  AddPatient,
+  AddEntry
 };
