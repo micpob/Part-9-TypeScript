@@ -1,37 +1,70 @@
 import { useState, useEffect } from "react";
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import patientService from "../../services/patients";
+import entryService from "../../services/entries";
 import { apiBaseUrl } from "../../constants";
 import axios from "axios";
-import { Patient, Diagnosis } from "../../types";
+import { EntryFormValues, Patient, Diagnosis } from "../../types";
 import Entries from "./Entries";
-
+import AddEntryModal from "../AddEntryModal";
 interface Props {
   patientId? : string
   diagnoses: Diagnosis[]
 }
 
 const PatientPage = ({patientId, diagnoses} : Props ) => {
-
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
   const [patient, setPatient] = useState<Patient>();
+  
+  if (typeof patientId == 'undefined') {
+    return null;
+  }
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    console.log('submitNewEntry:', values);
+    console.log('patientId:', patientId);
+
+    try {
+      const newEntry = await entryService.create(values, patientId);
+      patient?.entries.push(newEntry);
+      //setPatients(patients.concat(patient));
+      setModalOpen(false);
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace('Something went wrong. Error: ', '');
+          console.error(message);
+          setError(message);
+        } else {
+          setError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
+    }
+  };
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
 
     const fetchPatient = async () => {
-      if (typeof patientId == 'undefined') {
-        return null;
-      } else {
-        const patient =  await patientService.getPatient(patientId);
-        setPatient(patient);
-      }
-      
+      const patient =  await patientService.getPatient(patientId);
+      setPatient(patient);
     };
     void fetchPatient();
-  }, []);
+  }, [patient]);
   
   return (
     <div className="App">
@@ -50,6 +83,15 @@ const PatientPage = ({patientId, diagnoses} : Props ) => {
             <Typography>No entries for this patient</Typography> 
           }
           </div>
+          <AddEntryModal
+            modalOpen={modalOpen}
+            onSubmit={submitNewEntry}
+            error={error}
+            onClose={closeModal}
+          />
+          <Button variant="contained" onClick={() => openModal()}>
+            Add New Entry
+          </Button>
         </div>
 
         :

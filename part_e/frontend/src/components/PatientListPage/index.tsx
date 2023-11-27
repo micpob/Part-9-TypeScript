@@ -80,7 +80,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
       </Table>
       <AddPatientModal
         modalOpen={modalOpen}
-        onSubmit={() => submitNewPatient}
+        onSubmit={submitNewPatient}
         error={error}
         onClose={closeModal}
       />

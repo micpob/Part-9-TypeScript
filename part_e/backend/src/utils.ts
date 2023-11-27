@@ -81,6 +81,9 @@ const toNewEntry = (object : unknown): EntryWithoutId => {
   const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
   };
+  const isArray = (item: unknown): item is string[] => {
+    return item instanceof Array;
+  };
 
   const isDate = (date: string): boolean => {
     return Boolean(Date.parse(date));
@@ -115,12 +118,12 @@ const toNewEntry = (object : unknown): EntryWithoutId => {
     return specialist;
   };
 
-  const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> =>  {
-    if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
-      // we will just trust the data to be in correct form
+  const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<Diagnosis['code']> =>  {
+    if (!diagnosisCodes || !isArray(diagnosisCodes)) {
+      console.log('parseDiagnosiscodes not correct')
       return [] as Array<Diagnosis['code']>;
     }
-    return object.diagnosisCodes as Array<Diagnosis['code']>;
+    return diagnosisCodes as Array<Diagnosis['code']>;
   };
 
   

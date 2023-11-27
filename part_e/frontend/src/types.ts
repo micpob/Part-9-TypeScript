@@ -1,3 +1,4 @@
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
 export interface Diagnosis {
   code: string;
   name: string;
@@ -10,6 +11,15 @@ export enum Gender {
   Other = "other"
 }
 
+export type Discharge = {
+  date: string,
+  criteria: string
+};
+
+export type SickLeave = { 
+  startDate: string, 
+  endDate: string 
+};
 export interface Patient {
   id: string;
   name: string;
@@ -45,15 +55,12 @@ export interface HealthCheckEntry extends BaseEntry {
 export interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
   employerName: string;
-  sickLeave?: { startDate: string, endDate: string }
+  sickLeave?: SickLeave
 }
 
 export interface HospitalEntry extends BaseEntry {
   type: "Hospital";
-  discharge: {
-    date: string;
-    criteria: string;
-  }
+  discharge: Discharge
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -63,3 +70,5 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+export type EntryFormValues = UnionOmit<Entry, "id">;
