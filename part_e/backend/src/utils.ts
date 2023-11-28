@@ -205,8 +205,8 @@ const toNewOccupationalHealthcareEntry = (object : object, baseEntry : BaseEntry
     return date;
   };
 
-  const parseEeployerName = (employerName: unknown): string => {
-    if (!isString(employerName)) {
+  const parseEmployerName = (employerName: unknown): string => {
+    if (!isString(employerName) || employerName.length < 1) {
       throw new Error('Incorrect or missing employerName');
     }
     return employerName;
@@ -225,7 +225,7 @@ const toNewOccupationalHealthcareEntry = (object : object, baseEntry : BaseEntry
   };
 
   if ('type' in object && 'employerName' in object) {
-    const newOccupationalHealthcareEntry: OccupationalHealthcareEntryWithoutId = {...baseEntry, type: 'OccupationalHealthcare', employerName: parseEeployerName(object.employerName)}
+    const newOccupationalHealthcareEntry: OccupationalHealthcareEntryWithoutId = {...baseEntry, type: 'OccupationalHealthcare', employerName: parseEmployerName(object.employerName)}
     if ('sickLeave' in object) {
       newOccupationalHealthcareEntry.sickLeave = parseSickLeave(object.sickLeave)
     }
@@ -254,7 +254,7 @@ const toNewHospitalEntry = (object : object, baseEntry : BaseEntryWithoutId): Ho
   };
 
   const parseCriteria = (criteria: unknown): string => {
-    if (!isString(criteria)) {
+    if (!isString(criteria) || criteria.length < 1) {
       throw new Error('Incorrect or missing criteria');
     }
     return criteria;

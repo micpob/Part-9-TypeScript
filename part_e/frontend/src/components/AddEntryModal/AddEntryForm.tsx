@@ -16,6 +16,11 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [diagnosisCodes, setDiagnosisCodes] = useState<Array<string>>([]);
   const [entryType, setEntryType] = useState('');
   const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating>(0);
+  const [employerName, setEmployerName] = useState('');
+  const [sickLeaveStart, setSickLeaveStart] = useState('');
+  const [sickLeaveEnd, setSickLeaveEnd] = useState('');
+  const [dischargeDate, setDschargeDate] = useState('');
+  const [dischargeCriteria, setDischargeCriteria] = useState('');
 
   const onTypeChange = (event: SelectChangeEvent<string>) => {
     event.preventDefault();
@@ -27,15 +32,43 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
 
   const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
-    console.log('addEntry');
-    onSubmit({
-      description,
-      specialist,
-      date,
-      diagnosisCodes,
-      type: 'HealthCheck',
-      healthCheckRating
-    });
+    switch (entryType) {
+      case 'HealthCheck':
+        onSubmit({
+          description,
+          specialist,
+          date,
+          diagnosisCodes,
+          type: 'HealthCheck',
+          healthCheckRating
+        });  
+        break;
+      case 'OccupationalHealthcare':
+        onSubmit({
+          description,
+          specialist,
+          date,
+          diagnosisCodes,
+          type: 'OccupationalHealthcare',
+          employerName,
+          sickLeave: {startDate: sickLeaveStart, endDate: sickLeaveEnd }
+        }); 
+        break;
+      case 'Hospital':
+        onSubmit({
+          description,
+          specialist,
+          date,
+          diagnosisCodes,
+          type: 'Hospital',
+          discharge: {date: dischargeDate, criteria: dischargeCriteria }
+        }); 
+        break;
+    
+      default:
+        break;
+    }
+
   };
 
   return (
@@ -61,6 +94,47 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
             onChange={({ target }) => setHealthCheckRating(parseInt(target.value))}
           />
         }
+
+        {
+          entryType === 'OccupationalHealthcare' && 
+          <div>
+             <TextField
+            label="Employer name"
+            fullWidth 
+            value={employerName}
+            onChange={({ target }) => setEmployerName(target.value)}
+            />
+            <TextField
+              label="Sick leave start"
+              fullWidth 
+              value={sickLeaveStart}
+              onChange={({ target }) => setSickLeaveStart(target.value)}
+            />
+            <TextField
+              label="Sick leave end"
+              fullWidth 
+              value={sickLeaveEnd}
+              onChange={({ target }) => setSickLeaveEnd(target.value)}
+            />
+          </div>
+        }
+        {
+          entryType === 'Hospital' && 
+          <div>
+             <TextField
+            label="Discharge date"
+            fullWidth 
+            value={dischargeDate}
+            onChange={({ target }) => setDschargeDate(target.value)}
+            />
+            <TextField
+              label="Discharge criteria"
+              fullWidth 
+              value={dischargeCriteria}
+              onChange={({ target }) => setDischargeCriteria(target.value)}
+            />
+          </div>
+        }
         <TextField
           label="Description"
           fullWidth 
@@ -84,7 +158,6 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
           label="DiagnosisCodes"
           fullWidth
           value={diagnosisCodes}
-          /* onChange={({ target }) => onDiagnosisCodesChange(target)} */
           onChange={({ target }) => setDiagnosisCodes((target.value).split(','))}
         />
 
