@@ -32,9 +32,6 @@ const PatientPage = ({patientId, diagnoses} : Props ) => {
   };
 
   const submitNewEntry = async (values: EntryFormValues) => {
-    console.log('submitNewEntry:', values);
-    console.log('patientId:', patientId);
-
     try {
       const newEntry = await entryService.create(values, patientId);
       patient?.entries.push(newEntry);
@@ -54,6 +51,7 @@ const PatientPage = ({patientId, diagnoses} : Props ) => {
         setError("Unknown error");
       }
     }
+    
   };
 
   useEffect(() => {
@@ -87,6 +85,7 @@ const PatientPage = ({patientId, diagnoses} : Props ) => {
             modalOpen={modalOpen}
             onSubmit={submitNewEntry}
             error={error}
+            setError={setError}
             onClose={closeModal}
           />
           <Button variant="contained" onClick={() => openModal()}>

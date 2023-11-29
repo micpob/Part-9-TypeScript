@@ -1,15 +1,14 @@
 import { useState, SyntheticEvent } from "react";
-
-import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
-
+import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, Input } from '@mui/material';
 import { EntryFormValues, HealthCheckRating } from "../../types";
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: EntryFormValues) => void;
+  setError: (error : string) => void
 }
 
-const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
+const AddEntryForm = ({ onCancel, onSubmit, setError }: Props) => {
   const [description, setDescription] = useState('');
   const [specialist, setSpecialist] = useState('');
   const [date, setDate] = useState('');
@@ -30,8 +29,23 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
     }
   };
 
+  const onHealthCheckRatingChange = (event: SelectChangeEvent<number>) => {
+    event.preventDefault();
+    if ( typeof event.target.value === 'number') {
+      setHealthCheckRating(event.target.value);
+    }
+  };
+
+  const onDiagnosisCodesChange = (event: SelectChangeEvent<string[]>) => {
+    event.preventDefault();
+    const newValue = typeof event.target.value === "string" ? [event.target.value] : event.target.value;
+    console.log(newValue);
+      setDiagnosisCodes(newValue);
+  };
+
   const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
+    if (entryType.length < 1) return setError('Please choose a entry type');
     switch (entryType) {
       case 'HealthCheck':
         onSubmit({
@@ -87,12 +101,20 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
         </Select>
         {
           entryType === 'HealthCheck' && 
-          <TextField
-            label="Healthcheck rating"
-            fullWidth 
+          <div>
+            <InputLabel style={{ marginTop: 20 }}>Healtcheck rating</InputLabel>
+            <Select
+            label="Healtcheck rating"
+            fullWidth
             value={healthCheckRating}
-            onChange={({ target }) => setHealthCheckRating(parseInt(target.value))}
-          />
+            onChange={onHealthCheckRatingChange}
+            >
+              <MenuItem key={0} value={0}>Healthy</MenuItem>
+              <MenuItem key={1} value={1}>LowRisk</MenuItem>
+              <MenuItem key={2} value={2}>HighRisk</MenuItem>
+              <MenuItem key={3} value={3}>CriticalRisk</MenuItem>
+            </Select>
+          </div>
         }
 
         {
@@ -104,25 +126,32 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
             value={employerName}
             onChange={({ target }) => setEmployerName(target.value)}
             />
-            <TextField
-              label="Sick leave start"
+            <div style={{ marginTop: 10}}>
+              <p>Sickleave:</p>
+              <InputLabel style={{ marginTop: 5, marginLeft: 5 }}>start</InputLabel>
+              <Input
+              type="date"
               fullWidth 
               value={sickLeaveStart}
               onChange={({ target }) => setSickLeaveStart(target.value)}
             />
-            <TextField
-              label="Sick leave end"
+            <InputLabel style={{ marginTop: 5, marginLeft: 5 }}>end</InputLabel>
+            <Input
+              type="date"
               fullWidth 
               value={sickLeaveEnd}
               onChange={({ target }) => setSickLeaveEnd(target.value)}
             />
+            </div>
+            
           </div>
         }
         {
           entryType === 'Hospital' && 
           <div>
-             <TextField
-            label="Discharge date"
+            <InputLabel style={{ marginTop: 5, marginLeft: 5 }}>Discharge date:</InputLabel>
+            <Input
+            type="date"
             fullWidth 
             value={dischargeDate}
             onChange={({ target }) => setDschargeDate(target.value)}
@@ -147,19 +176,37 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
           value={specialist}
           onChange={({ target }) => setSpecialist(target.value)}
         />
-        <TextField
-          label="Date"
-          placeholder="YYYY-MM-DD"
+        <InputLabel>Date</InputLabel>
+        <Input
+          type="date"
           fullWidth
           value={date}
           onChange={({ target }) => setDate(target.value)}
         />
-        <TextField
-          label="DiagnosisCodes"
+        <InputLabel>Diagnosis codes</InputLabel>
+        <Select
+          label="Diagnosis codes"
           fullWidth
+          multiple
+          onChange={(event: SelectChangeEvent<string[]>) => onDiagnosisCodesChange(event)}
           value={diagnosisCodes}
-          onChange={({ target }) => setDiagnosisCodes((target.value).split(','))}
-        />
+        >
+          <MenuItem key={'M24.2'} value={'M24.2'}>Disorder of ligament</MenuItem>
+          <MenuItem key={'M51.2'} value={'M51.2'}>Other specified intervertebral disc displacement</MenuItem>
+          <MenuItem key={'S03.5'} value={'S03.5'}>Sprain and strain of joints and ligaments of other and unspecified parts of head</MenuItem>
+          <MenuItem key={'J10.1'} value={'J10.1'}>Influenza with other respiratory manifestations, other influenza virus codeentified</MenuItem>
+          <MenuItem key={'J06.9'} value={'J06.9'}>Acute upper respiratory infection, unspecified</MenuItem>
+          <MenuItem key={'Z57.1'} value={'Z57.1'}>Occupational exposure to radiation</MenuItem>
+          <MenuItem key={'N30.0'} value={'N30.0'}>Acute cystitis</MenuItem>
+          <MenuItem key={'H54.7'} value={'H54.7'}>Unspecified visual loss</MenuItem>
+          <MenuItem key={'J03.0'} value={'J03.0'}>Streptococcal tonsillitis</MenuItem>
+          <MenuItem key={'L60.1'} value={'L60.1'}>Onycholysis</MenuItem>
+          <MenuItem key={'Z74.3'} value={'Z74.3'}>Need for continuous supervision</MenuItem>
+          <MenuItem key={'L20'} value={'L20'}>Atopic dermatitis</MenuItem>
+          <MenuItem key={'F43.2'} value={'F43.2'}>Adjustment disorders</MenuItem>
+          <MenuItem key={'S62.5'} value={'S62.5'}>Fracture of thumb</MenuItem>
+          <MenuItem key={'H35.29'} value={'H35.29'}>Other proliferative retinopathy</MenuItem>
+        </Select>
 
         <Grid>
           <Grid item>
