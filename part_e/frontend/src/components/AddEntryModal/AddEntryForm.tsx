@@ -39,7 +39,6 @@ const AddEntryForm = ({ onCancel, onSubmit, setError }: Props) => {
   const onDiagnosisCodesChange = (event: SelectChangeEvent<string[]>) => {
     event.preventDefault();
     const newValue = typeof event.target.value === "string" ? [event.target.value] : event.target.value;
-    console.log(newValue);
       setDiagnosisCodes(newValue);
   };
 
@@ -88,7 +87,7 @@ const AddEntryForm = ({ onCancel, onSubmit, setError }: Props) => {
   return (
     <div>
       <form onSubmit={addEntry}>
-      <InputLabel style={{ marginTop: 20 }}>Type</InputLabel>
+      <InputLabel style={{ marginTop: 5 }}>Type:</InputLabel>
         <Select
           label="Type"
           fullWidth
@@ -176,15 +175,16 @@ const AddEntryForm = ({ onCancel, onSubmit, setError }: Props) => {
           value={specialist}
           onChange={({ target }) => setSpecialist(target.value)}
         />
-        <InputLabel>Date</InputLabel>
+        <InputLabel>Date:</InputLabel>
         <Input
           type="date"
           fullWidth
           value={date}
           onChange={({ target }) => setDate(target.value)}
         />
-        <InputLabel>Diagnosis codes</InputLabel>
+        <InputLabel>Diagnosis codes:</InputLabel>
         <Select
+          style={{ marginBottom: 5 }}
           label="Diagnosis codes"
           fullWidth
           multiple

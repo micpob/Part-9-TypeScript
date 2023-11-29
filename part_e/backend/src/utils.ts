@@ -120,7 +120,6 @@ const toNewEntry = (object : unknown): EntryWithoutId => {
 
   const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<Diagnosis['code']> =>  {
     if (!diagnosisCodes || !isArray(diagnosisCodes)) {
-      console.log('parseDiagnosiscodes not correct')
       return [] as Array<Diagnosis['code']>;
     }
     return diagnosisCodes as Array<Diagnosis['code']>;
